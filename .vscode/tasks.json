@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Code Mesh AST",
+            "command": "/opt/homebrew/opt/llvm/bin/clang",
+            "args": [
+                "-I/opt/homebrew/opt/llvm/include",
+                "-L/opt/homebrew/opt/llvm/lib",
+                "${workspaceFolder}/src/ast/ast_traversal.c",
+                "-lclang",
+                "-o",
+                "${workspaceFolder}/ast"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

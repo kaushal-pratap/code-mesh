@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "compilerPath": "/opt/homebrew/opt/llvm/bin/clang",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "/opt/homebrew/opt/llvm/include"
+            ],
+            "cStandard": "c17"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Mesh — Systems Code Visualizer</title>
+  <link rel="stylesheet" href="style.css?v=5.0">
+</head>
+<body>
+
+  <!-- Top Header Bar -->
+  <header class="app-header">
+    <div class="logo-group">
+      <div class="logo-box">CM</div>
+      <span class="app-title">Code Mesh</span>
+      <span class="version-tag">Systems Core C v1.0</span>
+    </div>
+    <div class="header-metrics">
+      <div class="metric-item">
+        <span class="metric-label">Total Nodes:</span>
+        <span class="metric-val" id="total-nodes">0</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Folders:</span>
+        <span class="metric-val" id="total-folders">0</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Files:</span>
+        <span class="metric-val" id="total-files">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main IDE Grid Container -->
+  <div class="ide-container">
+    
+    <!-- Left Sidebar: Project Explorer -->
+    <aside class="sidebar-explorer">
+      <div class="panel-header">
+        <span>PROJECT EXPLORER</span>
+        <button id="btn-refresh" title="Reload from mesh_data.json">🔄</button>
+      </div>
+      <div class="tree-viewport" id="tree-container">
+        <div class="loading-state">Loading scanned workspace tree...</div>
+      </div>
+    </aside>
+
+    <!-- Center Viewport: Canvas -->
+    <main class="main-viewport">
+      <div class="viewport-tabs">
+        <div class="tab active" id="tab-graph">📊 Code Dependency Graph</div>
+        <div class="tab" id="tab-matrix">🔢 Code Adjacency Matrix</div>
+      </div>
+
+      <div class="canvas-area" id="canvas-area">
+        <div class="placeholder-msg">
+          <h2>Code Mesh Engine Active</h2>
+          <p>Scanned workspace tree loaded. Backend detection in progress...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js?v=5.0"></script>
+</body>
+</html>

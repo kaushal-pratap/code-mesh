@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Code Mesh AST",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/ast",
+            "args": [
+                "${workspaceFolder}/test/test.c"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "Build Code Mesh AST"
+        }
+    ]
+}

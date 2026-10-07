@@ -1,0 +1,11 @@
+# Build artifacts
+codemesh_engine
+ast
+*.o
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.log
