@@ -3,77 +3,106 @@
 #include <stdlib.h>
 #include <string.h>
 
-Matrix *matrix_create(const char *name, size_t rows, size_t cols) {
-    if (rows == 0 || cols == 0) return NULL;
-    Matrix *m = (Matrix *)malloc(sizeof(Matrix));
-    if (!m) return NULL;
+Matrix* matrix_create(const char* name, MatrixType type, size_t rows, size_t columns){
 
-    strncpy(m->name, name ? name : "Matrix", sizeof(m->name) - 1);
-    m->rows = rows;
-    m->cols = cols;
-    m->data = (double *)calloc(rows * cols, sizeof(double));
-    if (!m->data) {
-        free(m);
+    Matrix *matrix = malloc(sizeof(Matrix));
+    if(matrix == NULL){
         return NULL;
     }
-    return m;
-}
 
-void matrix_free(Matrix *m) {
-    if (m) {
-        if (m->data) free(m->data);
-        free(m);
+    matrix->name = name;
+    matrix->rows = rows;
+    matrix->columns = columns;
+    matrix->type = type;
+
+    switch (type){
+        case MATRIX_INT:
+            matrix->element_size = sizeof(int);
+            break;
+        
+        case MATRIX_FLOAT:
+            matrix->element_size = sizeof(float);
+            break;
+
+        case MATRIX_DOUBLE:
+            matrix->element_size = sizeof(double);
+            break;
+        
+        case MATRIX_CHAR:
+            matrix->element_size = sizeof(char);
+            break;
     }
-}
 
-double matrix_get(const Matrix *m, size_t row, size_t col) {
-    if (!m || !m->data || row >= m->rows || col >= m->cols) return 0.0;
-    return m->data[row * m->cols + col];
-}
-
-bool matrix_set(Matrix *m, size_t row, size_t col, double val) {
-    if (!m || !m->data || row >= m->rows || col >= m->cols) return false;
-    m->data[row * m->cols + col] = val;
-    return true;
-}
-
-Matrix *matrix_add(const Matrix *A, const Matrix *B) {
-    if (!A || !B || A->rows != B->rows || A->cols != B->cols) return NULL;
-    Matrix *res = matrix_create("A + B", A->rows, A->cols);
-    if (!res) return NULL;
-
-    for (size_t i = 0; i < A->rows * A->cols; i++) {
-        res->data[i] = A->data[i] + B->data[i];
+    matrix->data = malloc(rows * columns * matrix->element_size);
+    if(matrix->data == NULL){
+        free(matrix);
+        return NULL;
     }
-    return res;
+
+    printf("Matrix Created successfully !!\n Name : %s\n Rows : %zu\n Columns : %zu\n", matrix->name, matrix->rows, matrix->columns);
+
+    return matrix;
+
 }
 
-Matrix *matrix_multiply(const Matrix *A, const Matrix *B) {
-    if (!A || !B || A->cols != B->rows) return NULL;
-    Matrix *res = matrix_create("A x B", A->rows, B->cols);
-    if (!res) return NULL;
+void matrix_set(Matrix* matrix, size_t index, const void* value){
+    switch (matrix->type){
+        case MATRIX_INT: {
+            int* data = (int*)matrix->data;
+            data[index] = *(const int *)value;
+            break;
+        }
+        
+        case MATRIX_FLOAT: {
+            float* data = (float*)matrix->data;
+            data[index] = *(const float *)value;
+            break;
+        }
 
-    for (size_t r = 0; r < A->rows; r++) {
-        for (size_t c = 0; c < B->cols; c++) {
-            double sum = 0.0;
-            for (size_t k = 0; k < A->cols; k++) {
-                sum += matrix_get(A, r, k) * matrix_get(B, k, c);
-            }
-            matrix_set(res, r, c, sum);
+        case MATRIX_DOUBLE: {
+            double* data = (double*)matrix->data;
+            data[index] = *(const double *)value;
+            break;
+        }
+        
+        case MATRIX_CHAR: {
+            char* data = (char*)matrix->data;
+            data[index] = *(const char *)value;
+            break;
         }
     }
-    return res;
+
 }
 
-Matrix *matrix_transpose(const Matrix *A) {
-    if (!A) return NULL;
-    Matrix *res = matrix_create("A^T", A->cols, A->rows);
-    if (!res) return NULL;
+void matrix_get(const Matrix* matrix, size_t index, void* value){
+    if (matrix == NULL || value == NULL) {
+        return;
+    }
 
-    for (size_t r = 0; r < A->rows; r++) {
-        for (size_t c = 0; c < A->cols; c++) {
-            matrix_set(res, c, r, matrix_get(A, r, c));
+    switch (matrix->type){
+        case MATRIX_INT: {
+            const int* data = (const int*)matrix->data;
+            *(int *)value = data[index];
+            break;
+        }
+        
+        case MATRIX_FLOAT: {
+            const float* data = (const float*)matrix->data;
+            *(float *)value = data[index];
+            break;
+        }
+
+        case MATRIX_DOUBLE: {
+            const double* data = (const double*)matrix->data;
+            *(double *)value = data[index];
+            break;
+        }
+        
+        case MATRIX_CHAR: {
+            const char* data = (const char*)matrix->data;
+            *(char *)value = data[index];
+            break;
         }
     }
-    return res;
+
 }

@@ -2,144 +2,204 @@
   "tree": [
     {
       "id": 0,
+      "name": "test",
+      "path": "./test",
+      "is_dir": true
+    },
+    {
+      "id": 1,
+      "name": "test.c",
+      "path": "./test/test.c",
+      "is_dir": false
+    },
+    {
+      "id": 2,
+      "name": "ast_traversal",
+      "path": "./ast_traversal",
+      "is_dir": false
+    },
+    {
+      "id": 3,
       "name": "Makefile",
       "path": "./Makefile",
       "is_dir": false
     },
     {
-      "id": 1,
+      "id": 4,
       "name": "web",
       "path": "./web",
       "is_dir": true
     },
     {
-      "id": 2,
+      "id": 5,
       "name": "index.html",
       "path": "./web/index.html",
       "is_dir": false
     },
     {
-      "id": 3,
+      "id": 6,
       "name": "mesh_data.json",
       "path": "./web/mesh_data.json",
       "is_dir": false
     },
     {
-      "id": 4,
+      "id": 7,
       "name": "style.css",
       "path": "./web/style.css",
       "is_dir": false
     },
     {
-      "id": 5,
+      "id": 8,
       "name": "app.js",
       "path": "./web/app.js",
       "is_dir": false
     },
     {
-      "id": 6,
+      "id": 9,
       "name": "include",
       "path": "./include",
       "is_dir": true
     },
     {
-      "id": 7,
+      "id": 10,
       "name": "exporter",
       "path": "./include/exporter",
       "is_dir": true
     },
     {
-      "id": 8,
+      "id": 11,
       "name": "json_exporter.h",
       "path": "./include/exporter/json_exporter.h",
       "is_dir": false
     },
     {
-      "id": 9,
+      "id": 12,
       "name": "scanner",
       "path": "./include/scanner",
       "is_dir": true
     },
     {
-      "id": 10,
+      "id": 13,
       "name": "tree_scanner.h",
       "path": "./include/scanner/tree_scanner.h",
       "is_dir": false
     },
     {
-      "id": 11,
+      "id": 14,
       "name": "matrix",
       "path": "./include/matrix",
       "is_dir": true
     },
     {
-      "id": 12,
+      "id": 15,
       "name": "matrix.h",
       "path": "./include/matrix/matrix.h",
       "is_dir": false
     },
     {
-      "id": 13,
+      "id": 16,
+      "name": "matrix_detector.h",
+      "path": "./include/matrix/matrix_detector.h",
+      "is_dir": false
+    },
+    {
+      "id": 17,
       "name": "render.js",
       "path": "./render.js",
       "is_dir": false
     },
     {
-      "id": 14,
+      "id": 18,
       "name": "run.sh",
       "path": "./run.sh",
       "is_dir": false
     },
     {
-      "id": 15,
+      "id": 19,
+      "name": "README.md",
+      "path": "./README.md",
+      "is_dir": false
+    },
+    {
+      "id": 20,
+      "name": "ast_detector",
+      "path": "./ast_detector",
+      "is_dir": false
+    },
+    {
+      "id": 21,
+      "name": "ast",
+      "path": "./ast",
+      "is_dir": false
+    },
+    {
+      "id": 22,
       "name": "codemesh_engine",
       "path": "./codemesh_engine",
       "is_dir": false
     },
     {
-      "id": 16,
+      "id": 23,
       "name": "src",
       "path": "./src",
       "is_dir": true
     },
     {
-      "id": 17,
+      "id": 24,
       "name": "main.c",
       "path": "./src/main.c",
       "is_dir": false
     },
     {
-      "id": 18,
+      "id": 25,
+      "name": "ast",
+      "path": "./src/ast",
+      "is_dir": true
+    },
+    {
+      "id": 26,
+      "name": "ast_traversal.c",
+      "path": "./src/ast/ast_traversal.c",
+      "is_dir": false
+    },
+    {
+      "id": 27,
       "name": "exporter",
       "path": "./src/exporter",
       "is_dir": true
     },
     {
-      "id": 19,
+      "id": 28,
       "name": "json_exporter.c",
       "path": "./src/exporter/json_exporter.c",
       "is_dir": false
     },
     {
-      "id": 20,
+      "id": 29,
       "name": "scanner",
       "path": "./src/scanner",
       "is_dir": true
     },
     {
-      "id": 21,
+      "id": 30,
       "name": "tree_scanner.c",
       "path": "./src/scanner/tree_scanner.c",
       "is_dir": false
     },
     {
-      "id": 22,
+      "id": 31,
       "name": "matrix",
       "path": "./src/matrix",
       "is_dir": true
     },
     {
-      "id": 23,
+      "id": 32,
+      "name": "matrix_detector.c",
+      "path": "./src/matrix/matrix_detector.c",
+      "is_dir": false
+    },
+    {
+      "id": 33,
       "name": "matrix.c",
       "path": "./src/matrix/matrix.c",
       "is_dir": false

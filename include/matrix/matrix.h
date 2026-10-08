@@ -4,24 +4,30 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/**
- * Matrix Structure for Pure Linear Algebra Math Operations
- */
-typedef struct {
-    char name[64];
+typedef enum{
+    MATRIX_INT,
+    MATRIX_FLOAT,
+    MATRIX_DOUBLE,
+    MATRIX_CHAR
+}MatrixType;
+
+typedef struct{
+    const char *name;
     size_t rows;
-    size_t cols;
-    double *data;
-} Matrix;
+    size_t columns;
+    MatrixType type;
+    size_t element_size;
+    void *data;
+}Matrix;
 
-Matrix *matrix_create(const char *name, size_t rows, size_t cols);
-void matrix_free(Matrix *m);
+typedef struct{
+    Matrix* matrix;
+    size_t row;
+    size_t column;
+}MatrixContext;
 
-double matrix_get(const Matrix *m, size_t row, size_t col);
-bool matrix_set(Matrix *m, size_t row, size_t col, double val);
-
-Matrix *matrix_add(const Matrix *A, const Matrix *B);
-Matrix *matrix_multiply(const Matrix *A, const Matrix *B);
-Matrix *matrix_transpose(const Matrix *A);
+Matrix* matrix_create(const char* name, MatrixType type, size_t rows, size_t columns);
+void matrix_set(Matrix* matrix, size_t index, const void* value);
+void matrix_get(const Matrix* matrix, size_t index, void* value);
 
 #endif // MATRIX_H
