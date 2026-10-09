@@ -2,29 +2,27 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -Iinclude -I/opt/homebrew/opt/llvm/include
 LDFLAGS = -L/opt/homebrew/opt/llvm/lib -lclang
 
-# Main Engine Target
-SRC = src/main.c src/matrix/matrix.c src/scanner/tree_scanner.c src/exporter/json_exporter.c
+# Main Engine — now includes AST analysis + matrix detection
+SRC = src/main.c \
+      src/scanner/tree_scanner.c \
+      src/exporter/json_exporter.c \
+      src/matrix/matrix.c \
+      src/matrix/matrix_detector.c \
+      src/ast/ast_traversal.c
 TARGET = codemesh_engine
 
-# AST Matrix Detector Standalone Target
-AST_SRC = src/ast/ast_traversal.c src/matrix/matrix_detector.c src/matrix/matrix.c
-AST_TARGET = ast_detector
-
-all: $(TARGET) $(AST_TARGET)
+all: $(TARGET)
 
 $(TARGET): $(SRC)
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
-
-$(AST_TARGET): $(AST_SRC)
-	$(CC) $(CFLAGS) $(AST_SRC) $(LDFLAGS) -o $(AST_TARGET)
+	$(CC) $(CFLAGS) $(SRC) $(LDFLAGS) -o $(TARGET)
 
 run: $(TARGET)
 	./$(TARGET)
 
-run-ast: $(AST_TARGET)
-	./$(AST_TARGET) test/test.c
+run-test: $(TARGET)
+	./$(TARGET) test
 
 clean:
-	rm -f $(TARGET) $(AST_TARGET) *.o
+	rm -f $(TARGET) ast_detector ast_traversal ast *.o
 
-.PHONY: all run run-ast clean
+.PHONY: all run run-test clean

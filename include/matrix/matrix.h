@@ -26,6 +26,12 @@ typedef struct{
     size_t column;
 }MatrixContext;
 
+typedef struct{
+    Matrix **matrices;
+    size_t count;
+    size_t capacity;
+}MatrixCollection;
+
 Matrix* matrix_create(const char* name, MatrixType type, size_t rows, size_t columns);
 void matrix_set(Matrix* matrix, size_t index, const void* value);
 void matrix_get(const Matrix* matrix, size_t index, void* value);

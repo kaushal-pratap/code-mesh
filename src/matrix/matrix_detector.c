@@ -78,17 +78,17 @@ static enum CXChildVisitResult initializer_visitor(
     return CXChildVisit_Recurse;
 }
 
-void matrix_analyze(CXCursor cursor){
+Matrix* matrix_analyze(CXCursor cursor){
     Matrix* matrix = NULL;
 
     CXType type = clang_getCursorType(cursor);
     if(type.kind != CXType_ConstantArray){
-        return;
+        return NULL;
     }
     if(type.kind == CXType_ConstantArray){
         CXType elemtype = clang_getArrayElementType(type);
         if (elemtype.kind != CXType_ConstantArray) {
-            return;
+            return NULL;
         }
         if(elemtype.kind == CXType_ConstantArray){
             long long rows = clang_getArraySize(type);
@@ -113,7 +113,7 @@ void matrix_analyze(CXCursor cursor){
                 matrix_type = MATRIX_CHAR;
                 break;
             default:
-                return;
+                return NULL;
             }
             matrix = matrix_create(clang_getCString(nameStr), matrix_type, rows, columns);
             clang_disposeString(nameStr);
@@ -127,7 +127,7 @@ void matrix_analyze(CXCursor cursor){
     };
 
     if(matrix == NULL){
-        return;
+        return NULL;
     }
 
     clang_visitChildren(
@@ -135,6 +135,8 @@ void matrix_analyze(CXCursor cursor){
         initializer_visitor,
         &matrix_context
     );
+
+    return matrix;
 }
 
 

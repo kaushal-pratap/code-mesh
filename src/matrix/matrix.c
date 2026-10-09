@@ -75,7 +75,7 @@ void matrix_set(Matrix* matrix, size_t index, const void* value){
 }
 
 void matrix_get(const Matrix* matrix, size_t index, void* value){
-    if (matrix == NULL || value == NULL) {
+    if (matrix == NULL || value == NULL || index >= matrix->rows * matrix->columns) {
         return;
     }
 

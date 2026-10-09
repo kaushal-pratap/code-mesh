@@ -2,7 +2,8 @@
 #define MATRIX_DETECTOR_H
 #include <stdio.h>
 #include <clang-c/Index.h>
+#include "matrix/matrix.h"
 
-void matrix_analyze(CXCursor cursor);
+Matrix* matrix_analyze(CXCursor cursor);
 
 #endif
