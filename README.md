@@ -48,6 +48,27 @@ Code Mesh is growing beyond matrices. Its long-term goal is to become a complete
 
 ---
 
+## 📸 Visual Demo & Live Engine Showcase
+
+Here is Code Mesh in action—transforming raw C source code array declarations into an interactive, mathematical matrix dashboard:
+
+### 1. Raw C Source Code with Initialized Matrices (`test/test.c`)
+The target code containing constant 2D matrix definitions (`matrix[3][4]` and `matrix2[2][2]`):
+
+![Raw C Source Code with Matrices](docs/assets/code_source.png)
+
+### 2. AST Discovered 2D Matrices Visualizer
+The dynamic web dashboard rendering the parsed matrices in high-tech bracket notation with contiguous Row-Major indexing:
+
+![AST Discovered 2D Matrices](docs/assets/matrix_visualizer.png)
+
+### 3. POSIX Scanned Workspace Tree Overview
+The project explorer sidebar and scanned directory structure summary:
+
+![Workspace Tree Overview](docs/assets/tree_explorer.png)
+
+---
+
 ## 🏛️ System Architecture & Components
 
 ```
