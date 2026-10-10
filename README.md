@@ -14,9 +14,6 @@
 
 </div>
 
-
----
-
 ## 📖 Introduction: What is Code Mesh?
 
 Working with multidimensional matrices in C is notoriously difficult and opaque. In standard systems programming and numerical code (game engines, computer vision, physics simulations, DSP, embedded graphics), matrices live as raw nested arrays:
