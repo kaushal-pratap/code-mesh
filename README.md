@@ -14,10 +14,6 @@
 
 </div>
 
----
-
-> [!NOTE]
-> **Authorship Disclosure**: The entire **C Systems Backend** (AST parsing, memory models, dynamic collections, POSIX file scanner, and custom JSON serialization) was written and engineered **100% by Kaushal**. The frontend web visualizer interface was generated with AI assistance.
 
 ---
 
@@ -43,6 +39,9 @@ Developers have **no visual inspection tool**, no way to verify multidimensional
 4. **Scans File System Hierarchies**: Recursively traverses project directories using native POSIX system calls.
 5. **Serializes to JSON without 3rd-Party Libraries**: Writes clean, structured JSON using POSIX file descriptors (`open`, `dprintf`, `close`).
 6. **Renders on an Interactive Visualizer**: Dynamically displays code matrices in mathematical bracket notation with cell-coordinate inspection.
+
+### 💡 Engineering Philosophy
+Code Mesh is grounded in **handcrafted C systems programming**. The entire core engine—AST traversal, memory allocators, pointer ownership models, POSIX directory scanner, dynamic collection structures, and custom serializer—is built purely from scratch in C11 without third-party frameworks or automated code generation. A browser-based frontend serves as a companion UI to visually interface with the engine's output.
 
 ### 🌟 Ultimate Vision: Zero-AI Code Knowledge Center
 Code Mesh is growing beyond matrices. Its long-term goal is to become a complete, **zero-AI static analysis and code architecture visualizer**. It will map entire codebases—tracking function call graphs, variable data flows, folder connections, and execution paths through pure mathematical graph theory and deterministic systems engineering.
@@ -307,7 +306,7 @@ Code Mesh/
 │       └── tree_scanner.c      # POSIX opendir/readdir recursive scanner
 ├── test/
 │   └── test.c                  # Sample C code containing initialized matrices
-└── web/                        # Web Visualizer Frontend (AI Generated UI)
+└── web/                        # Web Visualizer Dashboard (HTML5 / Vanilla CSS & JS)
     ├── index.html              # Modern IDE layout & tabs
     ├── style.css               # Dark theme, glassmorphic cards, math brackets
     ├── app.js                  # Dynamic JSON data fetcher & DOM renderer
