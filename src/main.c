@@ -48,6 +48,11 @@ int main(int argc, char *argv[]) {
     }
 
     printf("\n--> Total matrices discovered: %zu (stored in collection)\n", collection.count);
+    printf("--> Exporting matrices to web/matrix_data.json...\n");
+    export_metrices_json(&collection, "web/matrix_data.json");
+
     printf("\n--> Success! Code Mesh pipeline complete.\n");
+
+
     return 0;
 }

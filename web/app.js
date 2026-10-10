@@ -1,59 +1,186 @@
-// Code Mesh — Dynamic Frontend Tree & Visualizer Engine (v5.0)
+// Code Mesh — Dynamic Frontend AST Matrix Visualizer Engine (v6.1)
 
 const treeContainer = document.getElementById('tree-container');
-const totalNodesEl = document.getElementById('total-nodes');
-const totalFoldersEl = document.getElementById('total-folders');
+const totalMatricesEl = document.getElementById('total-matrices');
 const totalFilesEl = document.getElementById('total-files');
+const totalFoldersEl = document.getElementById('total-folders');
+const matrixCountBadge = document.getElementById('matrix-count-badge');
+
 const btnRefresh = document.getElementById('btn-refresh');
 const canvasArea = document.getElementById('canvas-area');
 
-const tabGraph = document.getElementById('tab-graph');
-const tabMatrix = document.getElementById('tab-matrix');
+const tabMatrices = document.getElementById('tab-matrices');
+const tabTreeSummary = document.getElementById('tab-tree-summary');
 
 let globalNodeData = [];
-let currentView = 'graph';
+let globalMatrixData = [];
+let currentView = 'matrices';
 
 /**
- * Fetch mesh_data.json dynamically emitted by C engine
+ * Main Data Fetcher — Loads both mesh_data.json and matrix_data.json
  */
-async function loadMeshData() {
+async function loadAllEngineData() {
   try {
-    treeContainer.innerHTML = '<div class="loading-state">Fetching live mesh_data.json...</div>';
-    
-    const response = await fetch(`mesh_data.json?t=${Date.now()}`);
-    if (!response.ok) {
-      throw new Error(`Failed to load mesh_data.json (${response.status})`);
+    canvasArea.innerHTML = '<div class="loading-state">Syncing live data from C Core Engine...</div>';
+
+    // 1. Fetch File Tree Data
+    const treeRes = await fetch(`mesh_data.json?t=${Date.now()}`);
+    if (treeRes.ok) {
+      const treeJson = await treeRes.json();
+      globalNodeData = treeJson.tree || [];
+      renderHierarchicalTree(globalNodeData);
     }
 
-    const data = await response.json();
-    globalNodeData = data.tree || [];
-    renderVisualizer();
+    // 2. Fetch Matrix Collection Data
+    const matrixRes = await fetch(`matrix_data.json?t=${Date.now()}`);
+    if (matrixRes.ok) {
+      const matrixJson = await matrixRes.json();
+      globalMatrixData = matrixJson.matrices || [];
+    } else {
+      globalMatrixData = [];
+    }
+
+    // Update Header Counts
+    totalMatricesEl.textContent = globalMatrixData.length;
+    matrixCountBadge.textContent = globalMatrixData.length;
+
+    // Render Current View
+    renderView();
+
   } catch (err) {
-    console.error(err);
-    treeContainer.innerHTML = `
-      <div class="loading-state" style="color: #ff4757;">
-        ⚠️ Error loading mesh_data.json.<br>
-        Run <code>make run</code> in C engine to export data.
+    console.error('Error fetching engine data:', err);
+    canvasArea.innerHTML = `
+      <div class="empty-state" style="color: #ff4757;">
+        ⚠️ Unable to load engine data JSON.<br>
+        Run <code>make run-test</code> in C engine to export live matrix data.
       </div>
     `;
   }
 }
 
 /**
- * Main Render Dispatcher
+ * Render View Dispatcher
  */
-function renderVisualizer() {
-  renderHierarchicalTree(globalNodeData);
-
-  if (currentView === 'matrix') {
-    renderAdjacencyMatrix(globalNodeData);
+function renderView() {
+  if (currentView === 'matrices') {
+    renderDiscoveredMatrices(globalMatrixData);
   } else {
-    renderGraphView(globalNodeData);
+    renderWorkspaceTreeSummary(globalNodeData);
   }
 }
 
 /**
- * Dynamic Hierarchical Folder Tree Builder
+ * Renders detected C 2D Matrices with high-tech bracket UI & Instant Tooltips
+ */
+function renderDiscoveredMatrices(matrices) {
+  if (!matrices || matrices.length === 0) {
+    canvasArea.innerHTML = `
+      <div class="empty-state">
+        <h3>No 2D Matrices Detected</h3>
+        <p>Run <code>make run-test</code> on C source files containing 2D arrays (e.g. <code>double m[3][4]</code>).</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="section-title">
+      <h2>⚡ AST Discovered 2D Matrices</h2>
+      <span class="badge-info">${matrices.length} Active Structure${matrices.length > 1 ? 's' : ''}</span>
+    </div>
+    <div class="matrices-grid">
+  `;
+
+  matrices.forEach((mat, idx) => {
+    const rows = mat.rows || (mat.data ? mat.data.length : 0);
+    const cols = mat.columns || mat.cols || (mat.data && mat.data[0] ? mat.data[0].length : 0);
+    const totalCells = rows * cols;
+
+    html += `
+      <div class="matrix-card-view">
+        <div class="card-top">
+          <div class="matrix-name-group">
+            <span class="matrix-name">
+              <span>📐</span> ${escapeHtml(mat.name || `matrix_${idx + 1}`)}
+            </span>
+            <span class="type-pill">C 2D Array</span>
+          </div>
+          <span class="matrix-dim-badge">${rows} × ${cols}</span>
+        </div>
+
+        <div class="math-matrix-wrapper">
+          <div class="bracket-left"></div>
+          
+          <div class="matrix-cells-grid" style="grid-template-columns: repeat(${cols}, minmax(52px, 1fr));">
+    `;
+
+    // Render 2D Grid Cells with Instant Hover Tooltip Badge
+    if (mat.data && Array.isArray(mat.data)) {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const val = (mat.data[r] && mat.data[r][c] !== undefined) ? mat.data[r][c] : 0;
+          html += `
+            <div class="matrix-cell-node" data-tooltip="[Row ${r}, Col ${c}]">
+              ${val}
+            </div>
+          `;
+        }
+      }
+    }
+
+    html += `
+          </div>
+
+          <div class="bracket-right"></div>
+        </div>
+
+        <div class="matrix-footer">
+          <span>Row Major Contiguous Memory</span>
+          <span>${totalCells} Elements</span>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  canvasArea.innerHTML = html;
+}
+
+/**
+ * Renders Workspace Tree Overview
+ */
+function renderWorkspaceTreeSummary(nodes) {
+  let fileCount = 0;
+  let dirCount = 0;
+
+  nodes.forEach(n => {
+    if (n.is_dir) dirCount++;
+    else fileCount++;
+  });
+
+  canvasArea.innerHTML = `
+    <div class="section-title">
+      <h2>📁 Workspace File Tree Summary</h2>
+      <span class="badge-info">${nodes.length} Scanned Nodes</span>
+    </div>
+
+    <div class="matrices-grid">
+      <div class="matrix-card-view">
+        <div class="card-top">
+          <span class="matrix-name">📂 Directory Structure</span>
+        </div>
+        <div style="font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.8; color: var(--text-secondary);">
+          <p>• Total Nodes: <strong style="color:var(--accent-cyan);">${nodes.length}</strong></p>
+          <p>• Total Folders: <strong style="color:var(--accent-green);">${dirCount}</strong></p>
+          <p>• Total Files: <strong style="color:var(--accent-purple);">${fileCount}</strong></p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Dynamic Sidebar Tree Builder
  */
 function renderHierarchicalTree(nodes) {
   treeContainer.innerHTML = '';
@@ -150,9 +277,8 @@ function renderHierarchicalTree(nodes) {
 
   treeContainer.appendChild(createTreeDOM(root));
 
-  totalNodesEl.textContent = nodes.length;
-  totalFoldersEl.textContent = folderCount;
   totalFilesEl.textContent = fileCount;
+  totalFoldersEl.textContent = folderCount;
 }
 
 function getFileBadge(filename) {
@@ -164,57 +290,8 @@ function getFileBadge(filename) {
     case 'js': return '<span class="file-icon icon-js">JS</span>';
     case 'html': return '<span class="file-icon icon-html">&lt;&gt;</span>';
     case 'css': return '<span class="file-icon icon-css">#</span>';
-    case 'sh': return '<span class="file-icon icon-c">SH</span>';
     default: return '<span class="file-icon icon-def">📄</span>';
   }
-}
-
-function renderAdjacencyMatrix(nodes) {
-  const N = nodes.length;
-  if (N === 0) return;
-
-  canvasArea.innerHTML = `
-    <div class="matrix-container-view">
-      <div class="matrix-title">
-        <span>⚡ Code Mesh Adjacency Matrix (${N} × ${N})</span>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Nodes: 0 to ${N - 1}</span>
-      </div>
-      <div class="matrix-grid-view" id="matrix-grid-view"></div>
-    </div>
-  `;
-
-  const grid = document.getElementById('matrix-grid-view');
-  grid.style.gridTemplateColumns = `repeat(${N + 1}, 42px)`;
-
-  grid.appendChild(createCell('', 'matrix-header-cell'));
-  for (let c = 0; c < N; c++) {
-    grid.appendChild(createCell(`#${c}`, 'matrix-header-cell'));
-  }
-
-  for (let r = 0; r < N; r++) {
-    grid.appendChild(createCell(`#${r}`, 'matrix-header-cell'));
-    for (let c = 0; c < N; c++) {
-      const isConnected = (r === c) || (nodes[r].is_dir && nodes[c].path.startsWith(nodes[r].path));
-      const cell = createCell(isConnected ? '1' : '0', isConnected ? 'matrix-cell-view active' : 'matrix-cell-view');
-      grid.appendChild(cell);
-    }
-  }
-}
-
-function createCell(text, className) {
-  const div = document.createElement('div');
-  div.className = className;
-  div.textContent = text;
-  return div;
-}
-
-function renderGraphView(nodes) {
-  canvasArea.innerHTML = `
-    <div class="placeholder-msg">
-      <h2>Code Mesh Dependency Engine Active</h2>
-      <p style="margin-top: 8px;">Scanned ${nodes.length} workspace nodes dynamically from C core engine.</p>
-    </div>
-  `;
 }
 
 function escapeHtml(str) {
@@ -225,22 +302,22 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-// Tab Switching Listeners
-tabGraph.addEventListener('click', () => {
-  tabGraph.classList.add('active');
-  tabMatrix.classList.remove('active');
-  currentView = 'graph';
-  renderVisualizer();
+// Tab Listeners
+tabMatrices.addEventListener('click', () => {
+  tabMatrices.classList.add('active');
+  tabTreeSummary.classList.remove('active');
+  currentView = 'matrices';
+  renderView();
 });
 
-tabMatrix.addEventListener('click', () => {
-  tabMatrix.classList.add('active');
-  tabGraph.classList.remove('active');
-  currentView = 'matrix';
-  renderVisualizer();
+tabTreeSummary.addEventListener('click', () => {
+  tabTreeSummary.classList.add('active');
+  tabMatrices.classList.remove('active');
+  currentView = 'tree-summary';
+  renderView();
 });
 
-btnRefresh.addEventListener('click', loadMeshData);
+btnRefresh.addEventListener('click', loadAllEngineData);
 
 // Initial Load
-loadMeshData();
+loadAllEngineData();

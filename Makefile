@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -Iinclude -I/opt/homebrew/opt/llvm/include
 LDFLAGS = -L/opt/homebrew/opt/llvm/lib -lclang
 
-# Main Engine — now includes AST analysis + matrix detection
+# Main Engine — includes AST analysis + matrix detection
 SRC = src/main.c \
       src/scanner/tree_scanner.c \
       src/exporter/json_exporter.c \
@@ -22,7 +22,10 @@ run: $(TARGET)
 run-test: $(TARGET)
 	./$(TARGET) test
 
+start:
+	./run.sh
+
 clean:
 	rm -f $(TARGET) ast_detector ast_traversal ast *.o
 
-.PHONY: all run run-test clean
+.PHONY: all run run-test start clean

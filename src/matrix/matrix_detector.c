@@ -1,5 +1,6 @@
 #include "matrix/matrix_detector.h"
 #include "matrix/matrix.h"
+#include <string.h>
 
 static enum CXChildVisitResult initializer_visitor(
     CXCursor cursor,
@@ -116,6 +117,7 @@ Matrix* matrix_analyze(CXCursor cursor){
                 return NULL;
             }
             matrix = matrix_create(clang_getCString(nameStr), matrix_type, rows, columns);
+            matrix->name = strdup(clang_getCString(nameStr));
             clang_disposeString(nameStr);
         }
     }

@@ -1,16 +1,27 @@
 #!/bin/bash
 
 PORT=8080
+TARGET_DIR="test"
 
 echo "=========================================="
-echo "    Code Mesh — Local Web Visualizer     "
+echo "    Code Mesh — Full Pipeline Runner     "
 echo "=========================================="
-echo "Serving web visualizer at http://localhost:$PORT ..."
-echo "Press Ctrl+C to stop the server."
+
+echo "--> 1. Building C Systems Engine..."
+make clean && make
+if [ $? -ne 0 ]; then
+    echo "❌ Build failed!"
+    exit 1
+fi
+
 echo ""
+echo "--> 2. Running C AST Engine on '$TARGET_DIR' directory..."
+./codemesh_engine "$TARGET_DIR"
 
-# Launch web browser automatically (macOS)
+echo ""
+echo "--> 3. Launching Web Visualizer at http://localhost:$PORT ..."
 open "http://localhost:$PORT"
 
-# Serve the web directory on port 8080
+echo "Serving web interface. Press Ctrl+C to stop."
+echo "=========================================="
 python3 -m http.server $PORT --directory web
