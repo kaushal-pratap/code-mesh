@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         .capacity = 2
     };
 
-    const char *dir = (argc > 1) ? argv[1] : "../Code Mesh";
+    const char *dir = (argc > 1) ? argv[1] : ".";
 
     printf("==========================================\n");
     printf("        Code Mesh — C Systems Engine      \n");
